@@ -1,0 +1,98 @@
+﻿<Window x:Class="Talis.FFXIV.LogReader.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="clr-namespace:Talis.FFXIV.LogReader.ViewModel"
+        Title="{Binding Path=DisplayName}"
+        WindowStyle="ThreeDBorderWindow"
+        WindowStartupLocation="CenterScreen"
+        >
+   
+    <Window.Resources>
+        <ResourceDictionary Source="MainWindowResources.xaml" />
+    </Window.Resources>
+
+    <Grid Margin="5 0 5 0">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="100"/>
+            <ColumnDefinition Width="100"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition x:Name="TaskPanelRow" Height="40"/>
+            <RowDefinition x:Name="NavigatorRow" Height="1*"/>
+            <RowDefinition x:Name="StatusRow" Height="30" />
+        </Grid.RowDefinitions>
+
+        <TextBox x:Name="inputFolder" Grid.Column="0" Grid.Row="0" Text="{Binding LogEntryRepository.LogFolder, Mode=OneWay}" VerticalAlignment="Center" FontStyle="Italic" />
+        <Button x:Name="inputBrowse" 
+                Margin="10 0"  
+                Grid.Column="1" 
+                Grid.Row="0" 
+                Content="Browse" 
+                VerticalAlignment="Center"
+                Command="{Binding LogEntryRepository.BrowseCommand}"/>
+
+        <Button x:Name="inputLoad" 
+                Margin="10 0"
+                Grid.Column="3" 
+                Grid.Row="0" 
+                Content="Read Logs" 
+                VerticalAlignment="Center"
+                Command="{Binding LogEntryRepository.LoadCommand}" />
+
+        <DataGrid 
+            x:Name="logDisplay" 
+            Grid.Column="0" 
+            Grid.ColumnSpan="3" 
+            Grid.Row="1" 
+            ItemsSource="{Binding Source={StaticResource logEntriesViewSource}}" 
+            AutoGenerateColumns="False" 
+            CanUserAddRows="False" 
+            IsReadOnly="True"
+            >
+            <DataGrid.Columns>
+                <DataGridTextColumn  Header="Time" Binding="{Binding RealTime}" Width="150" SortDirection="Descending" ElementStyle="{StaticResource CellCenter}" />
+                <DataGridTextColumn  Header="Code" Binding="{Binding Code}" Width="40" ElementStyle="{StaticResource CellCenter}" />
+                <DataGridTextColumn  Header="Name" Binding="{Binding Name}" ElementStyle="{StaticResource CellRight}" />
+                <DataGridTextColumn  Header="Message" Binding="{Binding Message}" Width="1*" />
+            </DataGrid.Columns>
+        </DataGrid>
+        
+        <Grid Grid.Row="2" Grid.ColumnSpan="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.3*"/>
+                <ColumnDefinition Width="0.4*"/>
+                <ColumnDefinition Width="0.3*"/>
+            </Grid.ColumnDefinitions>
+            
+            <Label x:Name="EntryCounter" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" DataContext="{Binding LogEntryRepository}">
+                <Label.Content>
+                    <TextBlock>
+                        <TextBlock.Text>
+                            <MultiBinding StringFormat="{}Entries Loaded: {0} / {1}" >
+                                <Binding Path="NumEntriesLoaded" />
+                                <Binding Path="NumEntriesTotal" />
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
+                </Label.Content>
+            </Label>
+
+            <ProgressBar x:Name="LogProgress" Grid.Column="1" Margin="0 6"  DataContext="{Binding LogEntryRepository}" Maximum="{Binding NumFilesTotal, Mode=OneWay}" Value="{Binding NumFilesLoaded, Mode=OneWay}"/>
+
+            <Label x:Name="FileCounter" Grid.Row="2" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" DataContext="{Binding LogEntryRepository}">
+                <Label.Content>
+                    <TextBlock>
+                        <TextBlock.Text>
+                            <MultiBinding StringFormat="{} Logs Loaded: {0} / {1}" >
+                                <Binding Path="NumFilesLoaded" />
+                                <Binding Path="NumFilesTotal" />
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
+                </Label.Content>
+            </Label>
+        </Grid>
+    </Grid>
+</Window>

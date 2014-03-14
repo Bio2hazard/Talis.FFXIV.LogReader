@@ -1,0 +1,22 @@
+﻿<ResourceDictionary 
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:vm="clr-namespace:Talis.FFXIV.LogReader.ViewModel"
+    xmlns:vw="clr-namespace:Talis.FFXIV.LogReader.View"
+    xmlns:da="clr-namespace:Talis.FFXIV.LogReader.DataAccess"
+    xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase">
+    
+    <CollectionViewSource x:Key="logEntriesViewSource" Source="{Binding AllLogEntries, Mode=OneWay}">
+        <CollectionViewSource.SortDescriptions>
+            <scm:SortDescription PropertyName="RealTime" Direction="Descending" />
+        </CollectionViewSource.SortDescriptions>
+    </CollectionViewSource>
+    <Style x:Key="CellCenter">
+        <Setter Property="Control.HorizontalAlignment"
+            Value="Center" />
+    </Style>
+    <Style x:Key="CellRight">
+        <Setter Property="Control.HorizontalAlignment"
+            Value="Right" />
+    </Style>
+</ResourceDictionary>
